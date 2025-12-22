@@ -1,0 +1,331 @@
+{
+	"info": {
+		"_postman_id": "2881e69c-b08a-48c7-8582-c3978f76c83c",
+		"name": "INA 17",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28698007"
+	},
+	"item": [
+		{
+			"name": "User Service",
+			"item": [
+				{
+					"name": "Get Auth User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_url}}/users/auth",
+							"host": [
+								"{{user_url}}"
+							],
+							"path": [
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_url}}/users",
+							"host": [
+								"{{user_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_url}}/login",
+							"host": [
+								"{{user_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Booking Service",
+			"item": [
+				{
+					"name": "Get All Event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{booking_url}}/events",
+							"host": [
+								"{{booking_url}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Ticket by Event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{booking_url}}/events/:uuid/tickets",
+							"host": [
+								"{{booking_url}}"
+							],
+							"path": [
+								"events",
+								":uuid",
+								"tickets"
+							],
+							"variable": [
+								{
+									"key": "uuid",
+									"value": "0cf33d20-ed2b-40e6-a72c-00878ca92b75"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"event_id\": \"0cf33d20-ed2b-40e6-a72c-00878ca92b75\",\n    \"ticket_id\": \"f2c5d8e7-31be-4a0d-9222-c783eff43c23\",\n    \"quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{booking_url}}/bookings",
+							"host": [
+								"{{booking_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{booking_url}}/bookings",
+							"host": [
+								"{{booking_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{booking_url}}/bookings/c8061234-da74-4856-8a26-6e7fbceb838f/status",
+							"host": [
+								"{{booking_url}}"
+							],
+							"path": [
+								"bookings",
+								"c8061234-da74-4856-8a26-6e7fbceb838f",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Service",
+			"item": [
+				{
+					"name": "Create Payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"booking_id\": \"725161df-a6b2-4ee7-9580-0c4d0a2db676\",\n    \"amount\": 150,\n    \"payment_method\": \"QRIS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{payment_url}}/payments",
+							"host": [
+								"{{payment_url}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Payment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{payment_url}}/payments",
+							"host": [
+								"{{payment_url}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Webhook Payment Gateway",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_id\": \"a9a498be-90f9-4d32-a68d-f29a628ee1ad\",\n    \"status\": \"PAID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{payment_url}}/payments/webhook/payment-gateway",
+							"host": [
+								"{{payment_url}}"
+							],
+							"path": [
+								"payments",
+								"webhook",
+								"payment-gateway"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "a42fabdfa27f89c742a8b7e0447e8e0acdbae9c6534a488154e1020399fd9956aa15e01435d18548ee4ab068bf21787ac2017972298d6c1994758ff2021d23b2a3a2efd35530f3f9ccf7a76aa242080f60cb3d94b370e21ef4b72a0054794ad143a9bbbe",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "user_url",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "booking_url",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "payment_url",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

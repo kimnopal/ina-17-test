@@ -1,0 +1,142 @@
+version: "3.8"
+
+services:
+  # User Service Database
+  user-db:
+    image: postgres:15-alpine
+    container_name: user-db
+    environment:
+      POSTGRES_DB: user_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Booking Service Database
+  booking-db:
+    image: postgres:15-alpine
+    container_name: booking-db
+    environment:
+      POSTGRES_DB: booking_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - booking-db-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Payment Service Database
+  payment-db:
+    image: postgres:15-alpine
+    container_name: payment-db
+    environment:
+      POSTGRES_DB: payment_service
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5437:5432"
+    volumes:
+      - payment-db-data:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # User Service
+  user-service:
+    build:
+      context: ./src/user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    env_file:
+      - ./src/user-service/.env
+    environment:
+      DB_HOST: user-db
+      DB_PORT: 5432
+    ports:
+      - "3000:3000"
+    depends_on:
+      user-db:
+        condition: service_healthy
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # Booking Service
+  booking-service:
+    build:
+      context: ./src/booking-service
+      dockerfile: Dockerfile
+    container_name: booking-service
+    env_file:
+      - ./src/booking-service/.env
+    environment:
+      DB_HOST: booking-db
+      DB_PORT: 5432
+      USER_SERVICE_URL: http://user-service:3000
+      PAYMENT_SERVICE_URL: http://payment-service:3002
+    ports:
+      - "3001:3001"
+    depends_on:
+      booking-db:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  # Payment Service
+  payment-service:
+    build:
+      context: ./src/payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    env_file:
+      - ./src/payment-service/.env
+    environment:
+      DB_HOST: payment-db
+      DB_PORT: 5432
+      USER_SERVICE_URL: http://user-service:3000
+      BOOKING_SERVICE_URL: http://booking-service:3001
+      BOOKING_WEBHOOK_URL: http://booking-service:3001/api/v1/bookings/webhook/payment
+    ports:
+      - "3002:3002"
+    depends_on:
+      payment-db:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+      booking-service:
+        condition: service_started
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  user-db-data:
+  booking-db-data:
+  payment-db-data:
