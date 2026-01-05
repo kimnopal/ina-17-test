@@ -78,7 +78,7 @@ func main() {
 	})
 
 	// Start server
-	port := ":3001"
+	port := ":3002"
 	log.Printf("Server starting on port %s", port)
 	if err := app.Listen(port); err != nil {
 		log.Fatal("Failed to start server:", err)

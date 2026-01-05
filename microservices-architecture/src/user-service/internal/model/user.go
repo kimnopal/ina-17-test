@@ -9,7 +9,6 @@ type User struct {
 	ID       uuid.UUID `gorm:"type:uuid;primaryKey;" json:"id"`
 	Username string    `gorm:"unique;not null" json:"username"`
 	Password string    `gorm:"not null" json:"password,omitempty"`
-	Token    string    `gorm:"type:varchar(255)" json:"token,omitempty"`
 	gorm.Model
 }
 

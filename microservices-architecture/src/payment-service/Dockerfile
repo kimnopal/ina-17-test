@@ -42,7 +42,7 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Expose port
-EXPOSE 8082
+EXPOSE 3003
 
 # Run the application
 CMD ["./main"]

@@ -4,6 +4,7 @@ import (
 	"log"
 	"user-service/config"
 	"user-service/internal/handler"
+	"user-service/internal/middleware"
 	"user-service/internal/repository"
 	"user-service/internal/service"
 	"user-service/migrations"
@@ -20,9 +21,12 @@ func main() {
 	// Run migrations
 	migrations.RunMigrations(config.DB)
 
-	// Initialize repository, service, and handler
+	// Initialize repositories
 	userRepo := repository.NewUserRepository(config.DB)
-	userService := service.NewUserService(userRepo)
+	refreshTokenRepo := repository.NewRefreshTokenRepository(config.DB)
+
+	// Initialize service and handler
+	userService := service.NewUserService(userRepo, refreshTokenRepo)
 	userHandler := handler.NewUserHandler(userService)
 
 	// Initialize Fiber app
@@ -37,11 +41,17 @@ func main() {
 	// Routes
 	api := app.Group("/api/v1")
 
-	// User routes
+	// Public routes (no authentication required)
 	api.Post("/login", userHandler.Login)
+	api.Post("/refresh", userHandler.RefreshToken)
+	api.Post("/logout", userHandler.Logout)
+
+	// User routes
 	users := api.Group("/users")
 	users.Post("/", userHandler.CreateUser)
-	users.Get("/auth", userHandler.GetAuthenticatedUser)
+
+	// Protected routes (authentication required)
+	users.Get("/auth", middleware.AuthMiddleware(), userHandler.GetAuthenticatedUser)
 
 	// Health check
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -52,7 +62,7 @@ func main() {
 	})
 
 	// Start server
-	port := ":3000"
+	port := ":3001"
 	log.Printf("Server starting on port %s", port)
 	if err := app.Listen(port); err != nil {
 		log.Fatal("Failed to start server:", err)

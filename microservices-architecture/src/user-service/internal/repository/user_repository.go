@@ -3,6 +3,7 @@ package repository
 import (
 	"user-service/internal/model"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -10,9 +11,9 @@ type UserRepository interface {
 	Create(user *model.User) error
 	Update(user *model.User) error
 	FindAll() ([]model.User, error)
+	FindByID(id uuid.UUID) (*model.User, error)
 	FindByUsername(username string) (*model.User, error)
 	FindLatest() (*model.User, error)
-	FindByToken(token string) (*model.User, error)
 }
 
 type userRepository struct {
@@ -55,9 +56,9 @@ func (r *userRepository) FindLatest() (*model.User, error) {
 	return &user, nil
 }
 
-func (r *userRepository) FindByToken(token string) (*model.User, error) {
+func (r *userRepository) FindByID(id uuid.UUID) (*model.User, error) {
 	var user model.User
-	err := r.db.Where("token = ?", token).First(&user).Error
+	err := r.db.Where("id = ?", id).First(&user).Error
 	if err != nil {
 		return nil, err
 	}

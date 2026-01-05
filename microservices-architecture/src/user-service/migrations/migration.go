@@ -8,7 +8,7 @@ import (
 )
 
 func RunMigrations(db *gorm.DB) {
-	err := db.AutoMigrate(&model.User{})
+	err := db.AutoMigrate(&model.User{}, &model.RefreshToken{})
 	if err != nil {
 		log.Fatal("Failed to run migrations:", err)
 	}
